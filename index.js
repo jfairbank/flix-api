@@ -30,6 +30,6 @@ app.post('/login', function(req, res) {
   res.send({ token });
 });
 
-app.listen(3001, function() {
-  console.log('Flix API listening on port 3001');
+app.listen(process.env.PORT || 3001, function() {
+  console.log('Flix API listening on a magical port that shall not be named');
 })
