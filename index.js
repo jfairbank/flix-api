@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+var jwt = require('jsonwebtoken');
+var bodyParser = require('body-parser');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -8,10 +10,26 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.post('/verify', function(req, res) {
-	res.send({ token: 123 });
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.post('/login', function(req, res) {
+  if (req.body.email !== 'user@flix.com') {
+    return res.sendStatus(401);
+  }
+
+  if (req.body.password !== 'password') {
+    return res.sendStatus(401);
+  }
+
+  var token = jwt.sign({ user: {
+    firstName: 'Test',
+    lastName: 'User',
+  }}, 'secret', { expiresIn: '1h' });
+
+  res.send({ token });
 });
 
 app.listen(3001, function() {
-	console.log('Flix API listening on port 3001');
+  console.log('Flix API listening on port 3001');
 })
